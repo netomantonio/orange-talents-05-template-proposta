@@ -1,9 +1,6 @@
 package br.com.zup.nossocartao.novaProposta.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,6 +23,7 @@ public class Proposta {
     @Positive
     private BigDecimal salario;
     @NotBlank
+    @Column(unique = true)
     private String documento;
 
     public Proposta(@Email @NotBlank String email,

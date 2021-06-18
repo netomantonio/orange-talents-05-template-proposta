@@ -1,6 +1,7 @@
 package br.com.zup.nossocartao.novaProposta.request;
 
 import br.com.zup.nossocartao.annotations.CPForCNPJ;
+import br.com.zup.nossocartao.annotations.Unique;
 import br.com.zup.nossocartao.novaProposta.model.Proposta;
 
 import javax.validation.constraints.Email;
@@ -43,5 +44,9 @@ public class NovaPropostaRequest {
 
     public Proposta toModel() {
         return new Proposta(email,nome,endereco,salario,documento);
+    }
+
+    public String getDocumento() {
+        return this.documento;
     }
 }
