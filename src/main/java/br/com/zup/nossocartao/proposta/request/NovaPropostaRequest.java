@@ -1,8 +1,7 @@
-package br.com.zup.nossocartao.novaProposta.request;
+package br.com.zup.nossocartao.proposta.request;
 
 import br.com.zup.nossocartao.annotations.CPForCNPJ;
-import br.com.zup.nossocartao.annotations.Unique;
-import br.com.zup.nossocartao.novaProposta.model.Proposta;
+import br.com.zup.nossocartao.proposta.model.Proposta;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +13,7 @@ public class NovaPropostaRequest {
 
     @CPForCNPJ(message = "ta errado fiao")
     @NotBlank
+//    @Unique(domainClass = Proposta.class, fieldName = "documento", message = "já existe proposta para esse documento")
     private String documento;
 
     @Email

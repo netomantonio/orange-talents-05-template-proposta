@@ -1,4 +1,6 @@
-package br.com.zup.nossocartao.novaProposta.model;
+package br.com.zup.nossocartao.proposta.model;
+
+import br.com.zup.nossocartao.proposta.compartilhado.StatusProposta;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -26,6 +28,11 @@ public class Proposta {
     @Column(unique = true)
     private String documento;
 
+    @Enumerated(EnumType.STRING)
+    private StatusProposta status;
+
+    @Deprecated
+    public Proposta(){}
     public Proposta(@Email @NotBlank String email,
                     @NotBlank String nome,
                     @NotBlank String endereco,
@@ -40,5 +47,17 @@ public class Proposta {
 
     public Long getId() {
         return this.id;
+    }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public String getDocumento() {
+        return this.documento;
+    }
+
+    public void setStatus(StatusProposta status) {
+        this.status = status;
     }
 }
