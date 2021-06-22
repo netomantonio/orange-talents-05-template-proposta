@@ -1,6 +1,6 @@
 package br.com.zup.nossocartao.servicosExternos.analiseFinanceira;
 
-import br.com.zup.nossocartao.proposta.compartilhado.StatusProposta;
+import br.com.zup.nossocartao.propostas.compartilhado.StatusProposta;
 
 public enum PropostaRetorno {
     COM_RESTRICAO{

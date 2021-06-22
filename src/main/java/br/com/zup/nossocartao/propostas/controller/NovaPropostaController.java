@@ -1,8 +1,8 @@
-package br.com.zup.nossocartao.proposta.controller;
+package br.com.zup.nossocartao.propostas.controller;
 
-import br.com.zup.nossocartao.proposta.model.Proposta;
-import br.com.zup.nossocartao.proposta.request.ConsultaDadosRequest;
-import br.com.zup.nossocartao.proposta.request.NovaPropostaRequest;
+import br.com.zup.nossocartao.propostas.model.Proposta;
+import br.com.zup.nossocartao.propostas.request.ConsultaDadosRequest;
+import br.com.zup.nossocartao.propostas.request.NovaPropostaRequest;
 import br.com.zup.nossocartao.servicosExternos.analiseFinanceira.ConsultaDados;
 import br.com.zup.nossocartao.servicosExternos.analiseFinanceira.ConsultaDadosPropostaResponse;
 import org.springframework.beans.factory.annotation.Autowired;

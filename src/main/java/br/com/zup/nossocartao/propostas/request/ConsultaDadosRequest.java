@@ -1,6 +1,6 @@
-package br.com.zup.nossocartao.proposta.request;
+package br.com.zup.nossocartao.propostas.request;
 
-import br.com.zup.nossocartao.proposta.model.Proposta;
+import br.com.zup.nossocartao.propostas.model.Proposta;
 
 public class ConsultaDadosRequest {
 

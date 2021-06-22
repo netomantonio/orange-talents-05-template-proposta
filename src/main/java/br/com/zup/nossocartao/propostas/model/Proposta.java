@@ -1,6 +1,7 @@
-package br.com.zup.nossocartao.proposta.model;
+package br.com.zup.nossocartao.propostas.model;
 
-import br.com.zup.nossocartao.proposta.compartilhado.StatusProposta;
+import br.com.zup.nossocartao.cartoes.model.Cartao;
+import br.com.zup.nossocartao.propostas.compartilhado.StatusProposta;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -31,6 +32,10 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatusProposta status;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(unique = true)
+    private Cartao cartao;
+
     @Deprecated
     public Proposta(){}
     public Proposta(@Email @NotBlank String email,
@@ -59,5 +64,9 @@ public class Proposta {
 
     public void setStatus(StatusProposta status) {
         this.status = status;
+    }
+
+    public void setCartao(Cartao cartao) {
+        this.cartao = cartao;
     }
 }
