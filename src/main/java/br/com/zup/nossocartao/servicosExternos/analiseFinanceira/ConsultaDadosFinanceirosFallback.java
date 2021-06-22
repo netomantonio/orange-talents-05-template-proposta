@@ -1,6 +1,6 @@
 package br.com.zup.nossocartao.servicosExternos.analiseFinanceira;
 
-import br.com.zup.nossocartao.propostas.request.ConsultaDadosRequest;
+import br.com.zup.nossocartao.propostas.requests.ConsultaDadosRequest;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,7 +1,7 @@
-package br.com.zup.nossocartao.propostas.request;
+package br.com.zup.nossocartao.propostas.requests;
 
 import br.com.zup.nossocartao.annotations.CPForCNPJ;
-import br.com.zup.nossocartao.propostas.model.Proposta;
+import br.com.zup.nossocartao.propostas.models.Proposta;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

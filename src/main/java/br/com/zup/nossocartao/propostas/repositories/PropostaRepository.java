@@ -1,6 +1,6 @@
-package br.com.zup.nossocartao.propostas.repository;
+package br.com.zup.nossocartao.propostas.repositories;
 
-import br.com.zup.nossocartao.propostas.model.Proposta;
+import br.com.zup.nossocartao.propostas.models.Proposta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,6 +1,6 @@
 package br.com.zup.nossocartao.cartoes.requests;
 
-import br.com.zup.nossocartao.cartoes.model.Cartao;
+import br.com.zup.nossocartao.cartoes.models.Cartao;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import javax.validation.constraints.*;

@@ -1,6 +1,6 @@
-package br.com.zup.nossocartao.cartoes.model;
+package br.com.zup.nossocartao.cartoes.models;
 
-import br.com.zup.nossocartao.cartoes.compartilhado.StatusCartao;
+import br.com.zup.nossocartao.cartoes.utils.StatusCartao;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

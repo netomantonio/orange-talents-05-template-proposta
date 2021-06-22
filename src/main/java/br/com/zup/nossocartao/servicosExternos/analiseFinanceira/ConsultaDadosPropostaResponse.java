@@ -1,6 +1,6 @@
 package br.com.zup.nossocartao.servicosExternos.analiseFinanceira;
 
-import br.com.zup.nossocartao.propostas.compartilhado.StatusProposta;
+import br.com.zup.nossocartao.propostas.utils.StatusProposta;
 
 public class ConsultaDadosPropostaResponse {
     private Long idProposta;

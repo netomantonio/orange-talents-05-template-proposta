@@ -1,7 +1,7 @@
-package br.com.zup.nossocartao.propostas.model;
+package br.com.zup.nossocartao.propostas.models;
 
-import br.com.zup.nossocartao.cartoes.model.Cartao;
-import br.com.zup.nossocartao.propostas.compartilhado.StatusProposta;
+import br.com.zup.nossocartao.cartoes.models.Cartao;
+import br.com.zup.nossocartao.propostas.utils.StatusProposta;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -68,5 +68,17 @@ public class Proposta {
 
     public void setCartao(Cartao cartao) {
         this.cartao = cartao;
+    }
+
+    public StatusProposta getStatus() {
+        return this.status;
+    }
+
+    public Boolean getTemCartao() {
+        return (this.cartao != null);
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 }

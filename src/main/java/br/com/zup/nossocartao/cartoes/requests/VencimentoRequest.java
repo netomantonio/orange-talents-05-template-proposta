@@ -1,7 +1,7 @@
 package br.com.zup.nossocartao.cartoes.requests;
 
 
-import br.com.zup.nossocartao.cartoes.model.Vencimento;
+import br.com.zup.nossocartao.cartoes.models.Vencimento;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package br.com.zup.nossocartao.propostas.compartilhado;
+package br.com.zup.nossocartao.propostas.utils;
 
 public enum StatusProposta {
 

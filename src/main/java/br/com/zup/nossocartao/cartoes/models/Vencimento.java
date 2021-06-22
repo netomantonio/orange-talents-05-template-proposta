@@ -1,4 +1,4 @@
-package br.com.zup.nossocartao.cartoes.model;
+package br.com.zup.nossocartao.cartoes.models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

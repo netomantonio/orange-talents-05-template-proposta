@@ -1,10 +1,10 @@
 package br.com.zup.nossocartao.propostas.tasks;
 
-import br.com.zup.nossocartao.cartoes.model.Cartao;
-import br.com.zup.nossocartao.cartoes.repository.CartaoRepository;
+import br.com.zup.nossocartao.cartoes.models.Cartao;
+import br.com.zup.nossocartao.cartoes.repositories.CartaoRepository;
 import br.com.zup.nossocartao.cartoes.requests.CartaoRequest;
-import br.com.zup.nossocartao.propostas.model.Proposta;
-import br.com.zup.nossocartao.propostas.repository.PropostaRepository;
+import br.com.zup.nossocartao.propostas.models.Proposta;
+import br.com.zup.nossocartao.propostas.repositories.PropostaRepository;
 import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaCartao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
