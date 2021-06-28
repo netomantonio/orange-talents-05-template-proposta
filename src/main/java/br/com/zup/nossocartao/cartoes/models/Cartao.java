@@ -57,4 +57,11 @@ public class Cartao {
         return this.id;
     }
 
+    public StatusCartao getCartaoBloqueado() {
+        return this.cartaoBloqueado;
+    }
+
+    public void bloquear(StatusCartao bloqueio) {
+        this.cartaoBloqueado = bloqueio;
+    }
 }

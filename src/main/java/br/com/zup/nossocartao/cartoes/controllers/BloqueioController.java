@@ -1,0 +1,64 @@
+package br.com.zup.nossocartao.cartoes.controllers;
+
+import br.com.zup.nossocartao.cartoes.enums.StatusBloqueio;
+import br.com.zup.nossocartao.cartoes.models.Bloqueio;
+import br.com.zup.nossocartao.cartoes.models.Cartao;
+import br.com.zup.nossocartao.cartoes.repositories.BloqueioRepository;
+import br.com.zup.nossocartao.cartoes.repositories.CartaoRepository;
+import br.com.zup.nossocartao.cartoes.requests.BloqueioRequest;
+import br.com.zup.nossocartao.cartoes.responses.BloqueioResponse;
+import br.com.zup.nossocartao.cartoes.utils.StatusCartao;
+import br.com.zup.nossocartao.errors.ErrorsResponse;
+import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaCartao;
+import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
+import java.util.Optional;
+
+@RestController
+public class BloqueioController {
+
+    @Autowired
+    CartaoRepository cartaoRepository;
+
+    @Autowired
+    BloqueioRepository bloqueioRepository;
+
+    @Autowired
+    SistemaCartao sistemaCartao;
+
+    @PostMapping("/api/cartoes/bloqueio")
+    public ResponseEntity<?> bloquear(@PathParam("idCartao") String idCartao, HttpServletRequest request) {
+        Optional<Cartao> cartaoBloqueio = cartaoRepository.findById(idCartao);
+        if (cartaoBloqueio.isEmpty()) return ResponseEntity.notFound().build();
+        if (cartaoBloqueio.get().getCartaoBloqueado().equals(StatusCartao.BLOQUEADO)) {
+            return ResponseEntity.unprocessableEntity().body(
+                    new ErrorsResponse("cartão", "Cartão já está bloqueado")
+            );
+        }
+        BloqueioResponse statusBloqueio = sistemaCartao.bloquearCartao(idCartao, new SistemaRequest("api-propostas"));
+        if (statusBloqueio.getResultado().equals(StatusBloqueio.FALHA)) {
+            return ResponseEntity.badRequest().body(
+                    new ErrorsResponse("cartao", "Falha na tentativa de bloqueio")
+            );
+        }
+
+        String ip = request.getRemoteAddr();
+        String userAgent = request.getHeader("User-Agent");
+
+        BloqueioRequest bloqueioRequest = new BloqueioRequest("propostas", false, ip, userAgent);
+        Bloqueio bloqueio = bloqueioRequest.toModel(cartaoBloqueio.get());
+
+        cartaoBloqueio.get().bloquear(StatusCartao.BLOQUEADO);
+        cartaoRepository.save(cartaoBloqueio.get());
+
+        bloqueioRepository.save(bloqueio);
+
+        return ResponseEntity.ok().build();
+    }
+}
