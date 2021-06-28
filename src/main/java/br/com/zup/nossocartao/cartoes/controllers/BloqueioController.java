@@ -34,9 +34,10 @@ public class BloqueioController {
 
     @PostMapping("/api/cartoes/bloqueio")
     public ResponseEntity<?> bloquear(@PathParam("idCartao") String idCartao, HttpServletRequest request) {
-        Optional<Cartao> cartaoBloqueio = cartaoRepository.findById(idCartao);
-        if (cartaoBloqueio.isEmpty()) return ResponseEntity.notFound().build();
-        if (cartaoBloqueio.get().getCartaoBloqueado().equals(StatusCartao.BLOQUEADO)) {
+        Optional<Cartao> possivelCartao = cartaoRepository.findById(idCartao);
+        if (possivelCartao.isEmpty()) return ResponseEntity.notFound().build();
+        Cartao cartaoRequest = possivelCartao.get();
+        if (cartaoRequest.getCartaoBloqueado().equals(StatusCartao.BLOQUEADO)) {
             return ResponseEntity.unprocessableEntity().body(
                     new ErrorsResponse("cartão", "Cartão já está bloqueado")
             );
@@ -52,10 +53,10 @@ public class BloqueioController {
         String userAgent = request.getHeader("User-Agent");
 
         BloqueioRequest bloqueioRequest = new BloqueioRequest("propostas", false, ip, userAgent);
-        Bloqueio bloqueio = bloqueioRequest.toModel(cartaoBloqueio.get());
+        Bloqueio bloqueio = bloqueioRequest.toModel(cartaoRequest);
 
-        cartaoBloqueio.get().bloquear(StatusCartao.BLOQUEADO);
-        cartaoRepository.save(cartaoBloqueio.get());
+        cartaoRequest.bloquear();
+        cartaoRepository.save(cartaoRequest);
 
         bloqueioRepository.save(bloqueio);
 

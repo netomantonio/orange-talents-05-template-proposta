@@ -61,7 +61,7 @@ public class Cartao {
         return this.cartaoBloqueado;
     }
 
-    public void bloquear(StatusCartao bloqueio) {
-        this.cartaoBloqueado = bloqueio;
+    public void bloquear() {
+        this.cartaoBloqueado = StatusCartao.BLOQUEADO;
     }
 }
