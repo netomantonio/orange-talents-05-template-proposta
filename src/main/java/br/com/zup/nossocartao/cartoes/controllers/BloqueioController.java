@@ -11,6 +11,8 @@ import br.com.zup.nossocartao.cartoes.utils.StatusCartao;
 import br.com.zup.nossocartao.errors.ErrorsResponse;
 import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaCartao;
 import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaRequest;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,11 +34,18 @@ public class BloqueioController {
     @Autowired
     SistemaCartao sistemaCartao;
 
+    @Autowired
+    Tracer tracer;
+
     @PostMapping("/api/cartoes/bloqueio")
     public ResponseEntity<?> bloquear(@PathParam("idCartao") String idCartao, HttpServletRequest request) {
         Optional<Cartao> possivelCartao = cartaoRepository.findById(idCartao);
         if (possivelCartao.isEmpty()) return ResponseEntity.notFound().build();
         Cartao cartaoRequest = possivelCartao.get();
+
+        Span activeSpan = tracer.activeSpan();
+        activeSpan.setTag("cartao.id", cartaoRequest.getId());
+
         if (cartaoRequest.getCartaoBloqueado().equals(StatusCartao.BLOQUEADO)) {
             return ResponseEntity.unprocessableEntity().body(
                     new ErrorsResponse("cartão", "Cartão já está bloqueado")

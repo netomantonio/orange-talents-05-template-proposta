@@ -4,6 +4,8 @@ import br.com.zup.nossocartao.biometrias.requests.BiometriaRequest;
 import br.com.zup.nossocartao.cartoes.models.Cartao;
 import br.com.zup.nossocartao.cartoes.repositories.CartaoRepository;
 import br.com.zup.nossocartao.errors.ErrorsResponse;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,9 @@ public class AdicionaBiometriaController {
     @Autowired
     CartaoRepository cartaoRepository;
 
+    @Autowired
+    Tracer tracer;
+
     @PostMapping("/api/cartoes/{id}/biometrias")
     public ResponseEntity<?> adicionar(@RequestBody @Valid BiometriaRequest biometriaRequest, @PathVariable String id, UriComponentsBuilder uriBuilder) {
 
@@ -31,6 +36,8 @@ public class AdicionaBiometriaController {
         if (cartao.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        Span activeSpan = tracer.activeSpan();
+        activeSpan.setTag("cartao.id", cartao.get().getId());
         List<ErrorsResponse> errorsResponses = biometriaRequest.verificaBase64();
 
         if (!errorsResponses.isEmpty()) {

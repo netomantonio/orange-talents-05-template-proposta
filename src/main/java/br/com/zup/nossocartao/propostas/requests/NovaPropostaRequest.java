@@ -43,10 +43,14 @@ public class NovaPropostaRequest {
     }
 
     public Proposta toModel() {
-        return new Proposta(email,nome,endereco,salario,documento);
+        return new Proposta(email, nome, endereco, salario, documento);
     }
 
     public String getDocumento() {
         return this.documento;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 }

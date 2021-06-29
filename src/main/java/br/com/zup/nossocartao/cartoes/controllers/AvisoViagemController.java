@@ -9,6 +9,8 @@ import br.com.zup.nossocartao.errors.ErrorsResponse;
 import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaCartao;
 import br.com.zup.nossocartao.servicosExternos.cartoes.StatusAviso;
 import br.com.zup.nossocartao.servicosExternos.cartoes.StatusAvisoResponse;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +37,9 @@ public class AvisoViagemController {
     @Autowired
     SistemaCartao sistemaCartao;
 
+    @Autowired
+    Tracer tracer;
+
     @Transactional
     @PostMapping("/api/cartoes/avisos/viagens")
     public ResponseEntity<?> avisar(@PathParam("idCartao") String idCartao,
@@ -43,6 +48,9 @@ public class AvisoViagemController {
         Optional<Cartao> possivelCartao = cartaoRepository.findById(idCartao);
         if (possivelCartao.isEmpty()) return ResponseEntity.notFound().build();
         Cartao cartaoRequest = possivelCartao.get();
+        Span activeSpan = tracer.activeSpan();
+        activeSpan.setTag("cartao.id", cartaoRequest.getId());
+
         if (cartaoRequest.getCartaoBloqueado().equals(StatusCartao.BLOQUEADO)) {
             return ResponseEntity.badRequest().body(
                     new ErrorsResponse("cartão", "Cartão está bloqueado")
