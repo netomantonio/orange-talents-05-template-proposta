@@ -7,6 +7,8 @@ import br.com.zup.nossocartao.cartoes.requests.AvisoViagemRequest;
 import br.com.zup.nossocartao.cartoes.utils.StatusCartao;
 import br.com.zup.nossocartao.errors.ErrorsResponse;
 import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaCartao;
+import br.com.zup.nossocartao.servicosExternos.cartoes.StatusAviso;
+import br.com.zup.nossocartao.servicosExternos.cartoes.StatusAvisoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +47,13 @@ public class AvisoViagemController {
             return ResponseEntity.badRequest().body(
                     new ErrorsResponse("cartão", "Cartão está bloqueado")
             );
+        }
+        StatusAvisoResponse statusAviso = sistemaCartao.adicionarAviso(idCartao, avisoViagemRequest);
+
+        if (statusAviso.getResultado().equals(StatusAviso.FALHA)) {
+
+            return ResponseEntity.badRequest().body(new ErrorsResponse("Avisos", "falha na tentativa do aviso de viagem"));
+
         }
 
         String ip = request.getRemoteAddr();
