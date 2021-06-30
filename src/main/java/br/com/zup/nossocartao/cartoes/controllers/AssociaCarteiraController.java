@@ -10,6 +10,8 @@ import br.com.zup.nossocartao.errors.ErrorsResponse;
 import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaCartao;
 import br.com.zup.nossocartao.servicosExternos.cartoes.StatusCarteira;
 import br.com.zup.nossocartao.servicosExternos.cartoes.StatusCarteiraResponse;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class AssociaCarteiraController {
     @Autowired
     Tracer tracer;
 
+    @Autowired
+    private MeterRegistry metrics;
+
     @PostMapping("/api/cartoes/carteiras")
     public ResponseEntity<?> associar(@PathParam("idCartao") String idCartao,
                                       @Valid @RequestBody CarteiraDigitalRequest carteiraDigitalRequest,
@@ -48,7 +53,8 @@ public class AssociaCarteiraController {
         Cartao cartaoRequest = possivelCartao.get();
         Span activeSpan = tracer.activeSpan();
         activeSpan.setTag("cartao.id", cartaoRequest.getId());
-
+        Counter contadorAssociaCarteira = metrics.counter("associa-carteira-created", "cartao-id-hash", cartaoRequest.toString());
+        contadorAssociaCarteira.increment();
         if (cartaoRequest.getCartaoBloqueado().equals(StatusCartao.BLOQUEADO)) {
             return ResponseEntity.badRequest().body(
                     new ErrorsResponse("cartão", "Cartão está bloqueado")

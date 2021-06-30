@@ -9,6 +9,8 @@ import br.com.zup.nossocartao.errors.ErrorsResponse;
 import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaCartao;
 import br.com.zup.nossocartao.servicosExternos.cartoes.StatusAviso;
 import br.com.zup.nossocartao.servicosExternos.cartoes.StatusAvisoResponse;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,9 @@ public class AvisoViagemController {
     @Autowired
     Tracer tracer;
 
+    @Autowired
+    private MeterRegistry metrics;
+
     @Transactional
     @PostMapping("/api/cartoes/avisos/viagens")
     public ResponseEntity<?> avisar(@PathParam("idCartao") String idCartao,
@@ -48,6 +53,8 @@ public class AvisoViagemController {
         Optional<Cartao> possivelCartao = cartaoRepository.findById(idCartao);
         if (possivelCartao.isEmpty()) return ResponseEntity.notFound().build();
         Cartao cartaoRequest = possivelCartao.get();
+        Counter contadorAvisoViagem = metrics.counter("aviso-viagem-created", "cartao-id-hash", cartaoRequest.toString());
+        contadorAvisoViagem.increment();
         Span activeSpan = tracer.activeSpan();
         activeSpan.setTag("cartao.id", cartaoRequest.getId());
 

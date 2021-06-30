@@ -4,6 +4,8 @@ import br.com.zup.nossocartao.biometrias.requests.BiometriaRequest;
 import br.com.zup.nossocartao.cartoes.models.Cartao;
 import br.com.zup.nossocartao.cartoes.repositories.CartaoRepository;
 import br.com.zup.nossocartao.errors.ErrorsResponse;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class AdicionaBiometriaController {
     @Autowired
     Tracer tracer;
 
+    @Autowired
+    private MeterRegistry metrics;
+
     @PostMapping("/api/cartoes/{id}/biometrias")
     public ResponseEntity<?> adicionar(@RequestBody @Valid BiometriaRequest biometriaRequest, @PathVariable String id, UriComponentsBuilder uriBuilder) {
 
@@ -43,6 +48,8 @@ public class AdicionaBiometriaController {
         if (!errorsResponses.isEmpty()) {
             return ResponseEntity.badRequest().body(errorsResponses);
         }
+        Counter contadorAssociaBiometria = metrics.counter("associa-biometria-created", "cartao-id-hash", cartao.get().toString());
+        contadorAssociaBiometria.increment();
 
         Cartao cartaoComBiometria = cartao.get().associaBiometria(biometriaRequest.toModel(cartao.get()));
 

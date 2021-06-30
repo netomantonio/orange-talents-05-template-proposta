@@ -64,4 +64,9 @@ public class Cartao {
     public void bloquear() {
         this.cartaoBloqueado = StatusCartao.BLOQUEADO;
     }
+
+    @Override
+    public String toString() {
+        return "" + this.id.hashCode();
+    }
 }

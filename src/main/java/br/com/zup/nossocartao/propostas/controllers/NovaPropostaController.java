@@ -5,6 +5,8 @@ import br.com.zup.nossocartao.propostas.requests.ConsultaDadosRequest;
 import br.com.zup.nossocartao.propostas.requests.NovaPropostaRequest;
 import br.com.zup.nossocartao.servicosExternos.analiseFinanceira.ConsultaDados;
 import br.com.zup.nossocartao.servicosExternos.analiseFinanceira.ConsultaDadosPropostaResponse;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class NovaPropostaController {
     @Autowired
     Tracer tracer;
 
+    @Autowired
+    private MeterRegistry metrics;
+
     @PostMapping("/api/propostas")
     @Transactional
     public ResponseEntity<?> novaProposta(@RequestBody @Valid NovaPropostaRequest request, UriComponentsBuilder builder) {
@@ -46,7 +51,8 @@ public class NovaPropostaController {
 
         Proposta novaProposta = request.toModel();
         manager.persist(novaProposta);
-
+        Counter contadorNovaProposta = metrics.counter("nova-proposta-created");
+        contadorNovaProposta.increment();
         ConsultaDadosPropostaResponse consultaDadosPropostaResponse = consultaDados.consultaDados(new ConsultaDadosRequest(novaProposta));
         novaProposta.setStatus(consultaDadosPropostaResponse.retornStatus());
 

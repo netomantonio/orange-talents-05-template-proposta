@@ -11,6 +11,8 @@ import br.com.zup.nossocartao.cartoes.utils.StatusCartao;
 import br.com.zup.nossocartao.errors.ErrorsResponse;
 import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaCartao;
 import br.com.zup.nossocartao.servicosExternos.cartoes.SistemaRequest;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +39,16 @@ public class BloqueioController {
     @Autowired
     Tracer tracer;
 
+    @Autowired
+    private MeterRegistry metrics;
+
     @PostMapping("/api/cartoes/bloqueio")
     public ResponseEntity<?> bloquear(@PathParam("idCartao") String idCartao, HttpServletRequest request) {
         Optional<Cartao> possivelCartao = cartaoRepository.findById(idCartao);
         if (possivelCartao.isEmpty()) return ResponseEntity.notFound().build();
         Cartao cartaoRequest = possivelCartao.get();
-
+        Counter contadorBloqueioCartao = metrics.counter("bloqueio-cartao-created", "cartao-id-hash", cartaoRequest.toString());
+        contadorBloqueioCartao.increment();
         Span activeSpan = tracer.activeSpan();
         activeSpan.setTag("cartao.id", cartaoRequest.getId());
 
