@@ -1,6 +1,7 @@
 package br.com.zup.nossocartao.propostas.models;
 
 import br.com.zup.nossocartao.cartoes.models.Cartao;
+import br.com.zup.nossocartao.propostas.utils.EncryptaDoc;
 import br.com.zup.nossocartao.propostas.utils.StatusProposta;
 
 import javax.persistence.*;
@@ -80,5 +81,10 @@ public class Proposta {
 
     public String getEmail() {
         return this.email;
+    }
+
+    @PrePersist
+    private void prePersist() {
+        this.documento = EncryptaDoc.secHash(this.documento);
     }
 }
